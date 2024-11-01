@@ -4,15 +4,15 @@
     <img src="https://i.imgur.com/xmdzXU4.png" />
   </a>
   <h3>
- @particle-network/connectkit on Lumia Demo 
+ @particle-network/connectkit on ElastOS Demo 
   </h3>
 </div>
 
-# Particle Connect on Lumia
+# Particle Connect on ElastOS
 
 **Particle Connect** enables a unified modal driving connection with social logins (through Particle Auth) and standard Web3 wallets, creating an equally accessible experience for Web3 natives and traditional consumers. Particle Connect is an all-in-one SDK capable of handling end-to-end onboarding and wallet connection.
 
-This app enables you to log in using social logins or Web3 methods via Particle Connect and interact with the [Lumia chain](https://docs.lumia.org/). You can view your account information and send transfer transactions to any address you input in the UI.
+This app enables you to log in using social logins or Web3 methods via Particle Connect and interact with the [ElastOS chain](https://elastos.dev/). You can view your account information and send transfer transactions to any address you input in the UI.
 
 Built using:
 
@@ -31,7 +31,7 @@ Built using:
 
 ### Clone this repository
 ```
-git clone https://github.com/Particle-Network/connectkit-lumia-demo
+git clone https://github.com/Particle-Network/connectkit-elastos-demo
 ```
 
 ### Move into the app directory
@@ -69,11 +69,11 @@ Or
 yarn dev
 ```
 
-## What is Lumia
+## What is ElastOS
 
-Lumia is a hyper-liquid, capital-efficient zkEVM leveraging advanced technologies like PolygonCDK, AvailDA, and a custom Data Availability Committee (DAC) for redundancy. 
+Elastos is a decentralized peer-to-peer infrastructure that supports a secure, scalable, and modular Web3 ecosystem. It leverages blockchain technology to authenticate digital rights, manage smart contracts, and transform digital information into assets, paving the way for a more innovative, safer web. 
 
-Built through a collaboration between GatewayFM and Lumia’s tech team, Lumia integrates features such as its liquidity network (Lumia Stream), decentralized sequencers and zkProvers, fast finality, and robust validity proofs.
+Optimized for dApp performance, Elastos addresses scalability challenges by leveraging a multichain architecture, providing developers an environment for decentralized solutions.
 
 ## Build with Particle Connect (from scratch)
 
@@ -105,45 +105,60 @@ To get started with Particle Connect in your application, follow these steps:
    - Additional appearance customizations.
 
    ```tsx
-   'use client';
+    "use client";
 
-    import React from 'react';
-    import { ConnectKitProvider, createConfig } from '@particle-network/connectkit';
-    import { authWalletConnectors } from '@particle-network/connectkit/auth';
-    import { defineChain } from '@particle-network/connectkit/chains';
+    import React from "react";
+    import { ConnectKitProvider, createConfig } from "@particle-network/connectkit";
+    import { authWalletConnectors } from "@particle-network/connectkit/auth";
+    import { defineChain } from "@particle-network/connectkit/chains";
+    import { wallet, EntryPosition } from "@particle-network/connectkit/wallet";
 
-    // Define the Lumia testnet
-    const LumiaTestnet = defineChain({
-    id: 1952959480,
-    name: "Lumia Testnet",
-    nativeCurrency: {
+    // Define the ElastOS chain
+
+    const elastOSMainnet = defineChain({
+      id: 20,
+      name: "ElastOS",
+      nativeCurrency: {
         decimals: 18,
-        name: "LUMIA",
-        symbol: "LUMIA",
-    },
-    rpcUrls: {
+        name: "ELA",
+        symbol: "ELA",
+      },
+      rpcUrls: {
         default: {
-        http: ["https://testnet-rpc.lumia.org"],
+          http: ["https://api.elastos.io/esc"],
         },
-    },
-    blockExplorers: {
-        default: { name: "Explorer", url: "https://testnet-explorer.lumia.org/" },
-    },
-    testnet: true,
+      },
+      blockExplorers: {
+        default: { name: "Explorer", url: "https://esc.elastos.io/" },
+      },
+      testnet: false,
     });
 
     const config = createConfig({
-    projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
-    clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY!,
-    appId: process.env.NEXT_PUBLIC_APP_ID!,
-    walletConnectors: [authWalletConnectors({})],
+      projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
+      clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY!,
+      appId: process.env.NEXT_PUBLIC_APP_ID!,
 
-    chains: [LumiaTestnet],
+      walletConnectors: [
+        authWalletConnectors({
+          authTypes: ["email", "google", "apple", "twitter", "github"], // Optional, restricts the types of social logins supported
+        }),
+      ],
+
+      plugins: [
+        wallet({
+          // Optional configurations for the attached embedded wallet modal
+          entryPosition: EntryPosition.BR, // Alters the position in which the modal button appears upon login
+          visible: true, // Dictates whether or not the wallet modal is included/visible or not
+        }),
+      ],
+      chains: [elastOSMainnet],
     });
 
     export const ParticleConnectkit = ({ children }: React.PropsWithChildren) => {
-    return <ConnectKitProvider config={config}>{children}</ConnectKitProvider>;
+      return <ConnectKitProvider config={config}>{children}</ConnectKitProvider>;
     };
+
    ```
 
 3. **Wrap Your App**:
@@ -160,7 +175,7 @@ To get started with Particle Connect in your application, follow these steps:
 
    export const metadata: Metadata = {
      title: "Particle Connect",
-     description: "Demo showcasing a quickstart for Particle Connect 2.0 on Lumia",
+     description: "Demo showcasing a quickstart for Particle Connect 2.0 on ElastOS",
    };
 
    export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
